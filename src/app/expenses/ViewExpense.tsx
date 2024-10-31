@@ -36,6 +36,11 @@ const initialExpenses: Expense[] = [
 const ViewExpense: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
+  const totalAmount = expenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0
+  );
+
   // NOTE: handle delete function of expense
   const handleDelete = (id: number) => {
     setExpenses(expenses.filter((expense) => expense.id !== id));
@@ -113,6 +118,22 @@ const ViewExpense: React.FC = () => {
                   </td>
                 </tr>
               ))}
+              {/* Total amount row */}
+              <tr>
+                <td
+                  colSpan={2}
+                  className="border border-gray-300 px-4 py-2 font-bold text-gray-800 text-left"
+                >
+                  Total Expenses
+                </td>
+                <td className="border border-gray-300 px-4 py-2 font-bold text-gray-800">
+                  ${totalAmount.toFixed(2)}
+                </td>
+                <td
+                  colSpan={2}
+                  className="border border-gray-300 px-4 py-2"
+                ></td>
+              </tr>
             </tbody>
           </table>
         </div>
