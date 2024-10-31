@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useState } from "react";
 
 interface Expense {
@@ -47,7 +48,14 @@ const ViewExpense: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-4 text-gray-800">Expense List</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold text-gray-800">Expense List</h1>
+        <Link href="/expenses/add">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+            + Add Expense
+          </button>
+        </Link>
+      </div>
 
       {expenses.length === 0 ? (
         <div className="bg-yellow-100 border border-yellow-400 text-gray-800 p-4 rounded">
