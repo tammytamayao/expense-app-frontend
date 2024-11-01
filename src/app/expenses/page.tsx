@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
+import { fetchExpenses } from "../api";
 
 interface Expense {
   id: number;
@@ -11,41 +11,40 @@ interface Expense {
   amount: number;
 }
 
-// NOTE: sample expenses data (replaced with data fetched from API)
-const initialExpenses: Expense[] = [
-  {
-    id: 1,
-    title: "Grocery",
-    description: "Weekly grocery shopping",
-    amount: 150,
-  },
-  {
-    id: 2,
-    title: "Utilities",
-    description: "Monthly electricity bill",
-    amount: 75,
-  },
-  {
-    id: 3,
-    title: "Internet",
-    description: "Monthly internet subscription",
-    amount: 60,
-  },
-];
-
 const ViewExpensePage: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadExpenses = async () => {
+      try {
+        const data = await fetchExpenses();
+        const expensesWithNumbers = data.map((expense) => ({
+          ...expense,
+          amount:
+            typeof expense.amount === "string"
+              ? parseFloat(expense.amount)
+              : expense.amount,
+        }));
+        setExpenses(expensesWithNumbers);
+      } catch (error) {
+        setError("Failed to load expenses");
+        console.error(error);
+      }
+    };
+
+    loadExpenses();
+  }, []);
 
   const totalAmount = expenses.reduce(
-    (sum, expense) => sum + expense.amount,
+    (sum, expense) =>
+      sum + (typeof expense.amount === "number" ? expense.amount : 0),
     0
   );
-
   // NOTE: handle delete function of expense
   const handleDelete = (id: number) => {
     setExpenses(expenses.filter((expense) => expense.id !== id));
   };
-
   // NOTE: handle edit function of expense
   const handleEdit = (expense: Expense) => {
     console.log("Edit expense:", expense);
