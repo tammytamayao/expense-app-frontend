@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { addExpense } from "../api";
 
 interface Expense {
   id?: number;
@@ -7,7 +8,6 @@ interface Expense {
   amount: number;
 }
 
-// NOTE: extendable edit feature of expense
 interface ExpenseFormProps {
   initialData?: Expense;
   onSubmit: (expense: Expense) => void;
@@ -22,6 +22,8 @@ export default function ExpenseForm({
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [amount, setAmount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialData) {
@@ -31,14 +33,30 @@ export default function ExpenseForm({
     }
   }, [initialData]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit({
+    setLoading(true);
+    setError(null);
+
+    const expense: Expense = {
       id: initialData?.id,
       title,
       description,
       amount,
-    });
+    };
+
+    try {
+      if (!isEdit) {
+        const newExpense = await addExpense(expense);
+        onSubmit(newExpense);
+      } else {
+        onSubmit(expense);
+      }
+    } catch (err) {
+      setError("Failed to add expense. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -81,10 +99,13 @@ export default function ExpenseForm({
 
       <button
         type="submit"
-        className="mt-4 py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+        disabled={loading}
+        className="mt-4 py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 disabled:bg-blue-300"
       >
-        {isEdit ? "Update" : "Add"}
+        {loading ? "Saving..." : isEdit ? "Update" : "Add"}
       </button>
+
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </form>
   );
 }

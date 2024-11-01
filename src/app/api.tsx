@@ -1,11 +1,13 @@
 const API_URL = "http://127.0.0.1:3000/api";
 
-interface Expense {
+export interface Expense {
   id: number;
   title: string;
   description: string;
   amount: number;
 }
+
+type NewExpense = Omit<Expense, "id">;
 
 export const fetchExpenses = async (): Promise<Expense[]> => {
   const response = await fetch(`${API_URL}/expenses`);
@@ -15,7 +17,7 @@ export const fetchExpenses = async (): Promise<Expense[]> => {
   return await response.json();
 };
 
-export const addExpense = async (expense: Expense): Promise<Expense> => {
+export const addExpense = async (expense: NewExpense): Promise<Expense> => {
   const response = await fetch(`${API_URL}/expenses`, {
     method: "POST",
     headers: {
