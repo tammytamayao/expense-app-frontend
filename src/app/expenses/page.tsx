@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { fetchExpenses } from "../api";
+import { fetchExpenses, deleteExpense } from "../api";
 
 interface Expense {
   id: number;
@@ -41,11 +41,17 @@ const ViewExpensePage: React.FC = () => {
       sum + (typeof expense.amount === "number" ? expense.amount : 0),
     0
   );
-  // NOTE: handle delete function of expense
-  const handleDelete = (id: number) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteExpense(id);
+      setExpenses(expenses.filter((expense) => expense.id !== id));
+    } catch (error) {
+      setError("Failed to delete expense");
+      console.error(error);
+    }
   };
-  // NOTE: handle edit function of expense
+
   const handleEdit = (expense: Expense) => {
     console.log("Edit expense:", expense);
   };
@@ -60,6 +66,12 @@ const ViewExpensePage: React.FC = () => {
           </button>
         </Link>
       </div>
+
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-800 p-4 rounded mb-4">
+          <p>{error}</p>
+        </div>
+      )}
 
       {expenses.length === 0 ? (
         <div className="bg-yellow-100 border border-yellow-400 text-gray-800 p-4 rounded">
@@ -117,7 +129,6 @@ const ViewExpensePage: React.FC = () => {
                   </td>
                 </tr>
               ))}
-              {/* Total amount row */}
               <tr>
                 <td
                   colSpan={2}
