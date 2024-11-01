@@ -64,10 +64,6 @@ const ViewExpensePage: React.FC = () => {
     }
   };
 
-  const handleEdit = (expense: Expense) => {
-    console.log("Edit expense:", expense);
-  };
-
   return (
     <div className="flex flex-col h-screen bg-gray-100 p-4">
       <MessageDisplay
@@ -123,12 +119,11 @@ const ViewExpensePage: React.FC = () => {
                     {expense.amount.toFixed(2)}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
-                    <button
-                      onClick={() => handleEdit(expense)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Edit
-                    </button>
+                    <Link href={`/expenses/${expense.id}/edit`}>
+                      <button className="text-blue-600 hover:underline">
+                        Edit
+                      </button>
+                    </Link>
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
                     <button

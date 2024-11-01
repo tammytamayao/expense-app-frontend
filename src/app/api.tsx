@@ -31,6 +31,31 @@ export const addExpense = async (expense: NewExpense): Promise<Expense> => {
   return await response.json();
 };
 
+export const editExpense = async (id: number) => {
+  const response = await fetch(`${API_URL}/expenses/${id}`);
+  if (!response.ok) {
+    throw new Error(`Failed to retrieve expense`);
+  }
+  return response.json();
+};
+
+export const updateExpense = async (
+  id: number,
+  expense: NewExpense
+): Promise<Expense> => {
+  const response = await fetch(`${API_URL}/expenses/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(expense),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to update expense");
+  }
+  return await response.json();
+};
+
 export const deleteExpense = async (id: number): Promise<void> => {
   const response = await fetch(`${API_URL}/expenses/${id}`, {
     method: "DELETE",

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { addExpense } from "../api";
+import { addExpense, updateExpense } from "../api";
 
 interface Expense {
   id?: number;
@@ -21,7 +21,7 @@ export default function ExpenseForm({
 }: ExpenseFormProps) {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +29,7 @@ export default function ExpenseForm({
     if (initialData) {
       setTitle(initialData.title);
       setDescription(initialData.description);
-      setAmount(initialData.amount);
+      setAmount(initialData.amount.toString());
     }
   }, [initialData]);
 
@@ -42,18 +42,19 @@ export default function ExpenseForm({
       id: initialData?.id,
       title,
       description,
-      amount,
+      amount: parseFloat(amount) || 0,
     };
 
     try {
-      if (!isEdit) {
+      if (isEdit && initialData?.id) {
+        const updatedExpense = await updateExpense(initialData.id, expense);
+        onSubmit(updatedExpense);
+      } else {
         const newExpense = await addExpense(expense);
         onSubmit(newExpense);
-      } else {
-        onSubmit(expense);
       }
     } catch (err) {
-      setError("Failed to add expense. Please try again.");
+      setError("Failed to save expense. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -84,14 +85,10 @@ export default function ExpenseForm({
       <div className="flex flex-col">
         <label className="text-gray-700 font-medium mb-1">Amount:</label>
         <input
-          type="text"
-          value={amount === 0 ? "" : amount}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (/^\d*$/.test(value)) {
-              setAmount(Number(value));
-            }
-          }}
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          step="0.01"
           required
           className="px-4 py-2 text-gray-700 font-medium border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
