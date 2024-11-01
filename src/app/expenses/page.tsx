@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchExpenses, deleteExpense } from "../api";
+import MessageDisplay from "../components/MessageDisplay";
 
 interface Expense {
   id: number;
@@ -14,6 +15,7 @@ interface Expense {
 const ViewExpensePage: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const loadExpenses = async () => {
@@ -46,9 +48,19 @@ const ViewExpensePage: React.FC = () => {
     try {
       await deleteExpense(id);
       setExpenses(expenses.filter((expense) => expense.id !== id));
+      setSuccessMessage("Expense deleted successfully!");
+      setError(null);
+
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 2000);
     } catch (error) {
       setError("Failed to delete expense");
       console.error(error);
+
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
     }
   };
 
@@ -58,6 +70,11 @@ const ViewExpensePage: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 p-4">
+      <MessageDisplay
+        message={successMessage || error}
+        isSuccess={!!successMessage}
+      />
+
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-gray-800">Expense List</h1>
         <Link href="/expenses/add">
@@ -66,12 +83,6 @@ const ViewExpensePage: React.FC = () => {
           </button>
         </Link>
       </div>
-
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-800 p-4 rounded mb-4">
-          <p>{error}</p>
-        </div>
-      )}
 
       {expenses.length === 0 ? (
         <div className="bg-yellow-100 border border-yellow-400 text-gray-800 p-4 rounded">
