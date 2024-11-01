@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
+import { fetchExpenses, deleteExpense } from "../api";
+import MessageDisplay from "../components/MessageDisplay";
 
 interface Expense {
   id: number;
@@ -11,48 +12,65 @@ interface Expense {
   amount: number;
 }
 
-// NOTE: sample expenses data (replaced with data fetched from API)
-const initialExpenses: Expense[] = [
-  {
-    id: 1,
-    title: "Grocery",
-    description: "Weekly grocery shopping",
-    amount: 150,
-  },
-  {
-    id: 2,
-    title: "Utilities",
-    description: "Monthly electricity bill",
-    amount: 75,
-  },
-  {
-    id: 3,
-    title: "Internet",
-    description: "Monthly internet subscription",
-    amount: 60,
-  },
-];
-
 const ViewExpensePage: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadExpenses = async () => {
+      try {
+        const data = await fetchExpenses();
+        const expensesWithNumbers = data.map((expense) => ({
+          ...expense,
+          amount:
+            typeof expense.amount === "string"
+              ? parseFloat(expense.amount)
+              : expense.amount,
+        }));
+        setExpenses(expensesWithNumbers);
+      } catch (error) {
+        setError("Failed to load expenses");
+        console.error(error);
+      }
+    };
+
+    loadExpenses();
+  }, []);
 
   const totalAmount = expenses.reduce(
-    (sum, expense) => sum + expense.amount,
+    (sum, expense) =>
+      sum + (typeof expense.amount === "number" ? expense.amount : 0),
     0
   );
 
-  // NOTE: handle delete function of expense
-  const handleDelete = (id: number) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
-  };
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteExpense(id);
+      setExpenses(expenses.filter((expense) => expense.id !== id));
+      setSuccessMessage("Expense deleted successfully!");
+      setError(null);
 
-  // NOTE: handle edit function of expense
-  const handleEdit = (expense: Expense) => {
-    console.log("Edit expense:", expense);
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 2000);
+    } catch (error) {
+      setError("Failed to delete expense");
+      console.error(error);
+
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
+    }
   };
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 p-4">
+      <MessageDisplay
+        message={successMessage || error}
+        isSuccess={!!successMessage}
+      />
+
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-gray-800">Expense List</h1>
         <Link href="/expenses/add">
@@ -101,12 +119,11 @@ const ViewExpensePage: React.FC = () => {
                     {expense.amount.toFixed(2)}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
-                    <button
-                      onClick={() => handleEdit(expense)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Edit
-                    </button>
+                    <Link href={`/expenses/${expense.id}/edit`}>
+                      <button className="text-blue-600 hover:underline">
+                        Edit
+                      </button>
+                    </Link>
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
                     <button
@@ -118,7 +135,6 @@ const ViewExpensePage: React.FC = () => {
                   </td>
                 </tr>
               ))}
-              {/* Total amount row */}
               <tr>
                 <td
                   colSpan={2}
