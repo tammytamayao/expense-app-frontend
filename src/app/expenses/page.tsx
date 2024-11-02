@@ -5,6 +5,7 @@ import Link from "next/link";
 import { fetchExpenses, deleteExpense } from "../api";
 import MessageDisplay from "../components/MessageDisplay";
 import Header from "../components/Header";
+import Loader from "../components/Loader";
 
 interface Expense {
   id: number;
@@ -21,8 +22,11 @@ const ViewExpensePage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [navigating, setNavigating] = useState<boolean>(false); // New state for navigating
 
   const loadExpenses = async (page: number) => {
+    setLoading(true);
     try {
       const data = await fetchExpenses(page);
       const expensesWithNumbers = data.expenses.map((expense) => ({
@@ -41,6 +45,8 @@ const ViewExpensePage: React.FC = () => {
     } catch (error) {
       setError("Failed to load expenses");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,6 +102,20 @@ const ViewExpensePage: React.FC = () => {
     }
   };
 
+  const handleAddExpenseClick = () => {
+    setNavigating(true);
+    setTimeout(() => {
+      setNavigating(false);
+    }, 500);
+  };
+
+  const handleEditExpenseClick = () => {
+    setNavigating(true);
+    setTimeout(() => {
+      setNavigating(false);
+    }, 500);
+  };
+
   return (
     <div>
       <Header />
@@ -107,12 +127,18 @@ const ViewExpensePage: React.FC = () => {
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-800">Expense List</h1>
           <Link href="/expenses/add">
-            <button className="bg-primary text-white px-4 py-2 rounded hover:bg-secondary transition-colors">
+            <button
+              onClick={handleAddExpenseClick}
+              className="bg-primary text-white px-4 py-2 rounded hover:bg-secondary transition-colors"
+            >
               + Add Expense
             </button>
           </Link>
         </div>
-        {expenses.length === 0 ? (
+
+        {loading || navigating ? (
+          <Loader />
+        ) : expenses.length === 0 ? (
           <div className="bg-yellow-100 border border-yellow-400 text-gray-800 p-4 rounded">
             <p>No expenses found. Please add some expenses.</p>
           </div>
@@ -158,7 +184,10 @@ const ViewExpensePage: React.FC = () => {
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
                       <Link href={`/expenses/${expense.id}/edit`}>
-                        <button className="text-blue-600 hover:underline">
+                        <button
+                          onClick={handleEditExpenseClick}
+                          className="text-blue-600 hover:underline"
+                        >
                           Edit
                         </button>
                       </Link>
