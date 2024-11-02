@@ -23,7 +23,7 @@ const ViewExpensePage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [navigating, setNavigating] = useState<boolean>(false); // New state for navigating
+  const [navigating, setNavigating] = useState<boolean>(false);
 
   const loadExpenses = async (page: number) => {
     setLoading(true);
