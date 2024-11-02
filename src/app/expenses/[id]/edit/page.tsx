@@ -2,7 +2,7 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import ExpenseForm from "../../../components/ExpenseForm";
+import ExpenseForm from "../../components/ExpenseForm";
 import MessageDisplay from "../../../components/MessageDisplay";
 import { editExpense, updateExpense } from "../../../api";
 import Header from "@/app/components/Header";

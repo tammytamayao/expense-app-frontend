@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import nextImage from "../../../public/logo.png";
-import LoginForm from "./LoginForm";
+import LoginForm from "./components/LoginForm";
 
 const HomePage: React.FC = () => {
   const handleLoginSubmit = (email: string, password: string) => {
