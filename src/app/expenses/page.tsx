@@ -18,52 +18,81 @@ const ViewExpensePage: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+
+  const loadExpenses = async (page: number) => {
+    try {
+      const data = await fetchExpenses(page);
+      const expensesWithNumbers = data.expenses.map((expense) => ({
+        ...expense,
+        amount:
+          typeof expense.amount === "string"
+            ? parseFloat(expense.amount)
+            : expense.amount,
+        date: new Date(expense.date),
+      }));
+
+      setExpenses(expensesWithNumbers);
+      setTotalAmount(Number(data.total_amount));
+      setTotalPages(data.total_pages);
+      setCurrentPage(data.current_page);
+    } catch (error) {
+      setError("Failed to load expenses");
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const loadExpenses = async () => {
-      try {
-        const data = await fetchExpenses();
-        const expensesWithNumbers = data.map((expense) => ({
-          ...expense,
-          amount:
-            typeof expense.amount === "string"
-              ? parseFloat(expense.amount)
-              : expense.amount,
-          date: new Date(expense.date),
-        }));
-        setExpenses(expensesWithNumbers);
-      } catch (error) {
-        setError("Failed to load expenses");
-        console.error(error);
-      }
-    };
-
-    loadExpenses();
-  }, []);
-
-  const totalAmount = expenses.reduce(
-    (sum, expense) =>
-      sum + (typeof expense.amount === "number" ? expense.amount : 0),
-    0
-  );
+    loadExpenses(currentPage);
+  }, [currentPage]);
 
   const handleDelete = async (id: number) => {
     try {
       await deleteExpense(id);
-      setExpenses(expenses.filter((expense) => expense.id !== id));
+      const updatedExpenses = expenses.filter((expense) => expense.id !== id);
+      setExpenses(updatedExpenses);
+
+      const updatedTotalAmount = updatedExpenses.reduce(
+        (total, expense) => total + expense.amount,
+        0
+      );
+      setTotalAmount(updatedTotalAmount);
+
+      if (updatedExpenses.length === 0) {
+        setCurrentPage(1);
+        loadExpenses(1);
+      } else {
+        if (updatedExpenses.length < (currentPage - 1) * 10) {
+          setCurrentPage(currentPage - 1);
+          loadExpenses(currentPage - 1);
+        }
+      }
+
       setSuccessMessage("Expense deleted successfully!");
       setError(null);
-
       setTimeout(() => {
         setSuccessMessage(null);
       }, 2000);
     } catch (error) {
       setError("Failed to delete expense");
       console.error(error);
-
       setTimeout(() => {
         setError(null);
       }, 2000);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
@@ -89,7 +118,7 @@ const ViewExpensePage: React.FC = () => {
           </div>
         ) : (
           <div className="flex-grow overflow-auto">
-            <table className="min-w-full border border-gray-300">
+            <table className="min-w-full border border-gray-300 mb-4">
               <thead>
                 <tr>
                   <th className="border border-gray-300 px-4 py-2 text-gray-800">
@@ -144,23 +173,36 @@ const ViewExpensePage: React.FC = () => {
                     </td>
                   </tr>
                 ))}
-                <tr>
-                  <td
-                    colSpan={3}
-                    className="border border-gray-300 px-4 py-2 font-bold text-gray-800 text-left"
-                  >
-                    Total Expenses
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 font-bold text-gray-800">
-                    ${totalAmount.toFixed(2)}
-                  </td>
-                  <td
-                    colSpan={2}
-                    className="border border-gray-300 px-4 py-2"
-                  ></td>
-                </tr>
               </tbody>
             </table>
+
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex-grow flex justify-center">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className="bg-primary text-white px-3 py-1 rounded disabled:opacity-50 text-sm"
+                >
+                  {"<"}
+                </button>
+                <span className="mx-2 text-black">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="bg-primary text-white px-3 py-1 rounded disabled:opacity-50 text-sm"
+                >
+                  {">"}
+                </button>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-800">
+                Total Expenses: ${totalAmount.toFixed(2)}
+              </h2>
+            </div>
           </div>
         )}
       </div>
