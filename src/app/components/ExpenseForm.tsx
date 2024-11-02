@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { addExpense, updateExpense } from "../api";
+import { useState } from "react";
 
 interface Expense {
   id?: number;
@@ -20,37 +19,22 @@ export default function ExpenseForm({
   onSubmit,
   isEdit,
 }: ExpenseFormProps) {
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>(initialData?.title || "");
+  const [description, setDescription] = useState<string>(
+    initialData?.description || ""
+  );
+  const [amount, setAmount] = useState<string>(
+    initialData?.amount?.toString() || ""
+  );
+  const [date, setDate] = useState<string>(
+    initialData?.date
+      ? new Date(initialData.date).toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0]
+  );
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title);
-      setDescription(initialData.description);
-      setAmount(initialData.amount.toString());
-
-      const initialDate =
-        typeof initialData.date === "string"
-          ? new Date(initialData.date)
-          : initialData.date;
-
-      setDate(
-        initialDate instanceof Date && !isNaN(initialDate.getTime())
-          ? initialDate.toISOString().split("T")[0]
-          : new Date().toISOString().split("T")[0]
-      );
-    }
-  }, [initialData]);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
     const expense: Expense = {
       id: initialData?.id,
       title,
@@ -59,29 +43,18 @@ export default function ExpenseForm({
       date: new Date(date),
     };
 
-    try {
-      if (isEdit && initialData?.id) {
-        const updatedExpense = await updateExpense(initialData.id, expense);
-        onSubmit(updatedExpense);
-      } else {
-        const newExpense = await addExpense(expense);
-        onSubmit(newExpense);
-      }
-    } catch (err) {
-      setError("Failed to save expense. Please try again.");
-    } finally {
-      setLoading(false);
+    if (!title || !description || !amount || !date) {
+      setError("All fields are required.");
+      return;
     }
+
+    setError(null);
+    onSubmit(expense);
   };
-
-  const today = new Date().toISOString().split("T")[0];
-
-  const minDate = new Date();
-  minDate.setFullYear(minDate.getFullYear() - 100);
-  const min = minDate.toISOString().split("T")[0];
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {/* Form fields */}
       <div className="flex flex-col">
         <label className="text-gray-700 font-medium mb-1">Title:</label>
         <input
@@ -120,18 +93,15 @@ export default function ExpenseForm({
           value={date}
           onChange={(e) => setDate(e.target.value)}
           required
-          max={today}
-          min={min}
           className="px-4 py-2 text-gray-700 font-medium border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
       </div>
 
       <button
         type="submit"
-        disabled={loading}
-        className="mt-4 py-2 px-4 bg-primary text-white font-semibold rounded hover:bg-secondary disabled:bg-blue-300"
+        className="mt-4 py-2 px-4 bg-primary text-white font-semibold rounded hover:bg-secondary"
       >
-        {loading ? "Saving..." : isEdit ? "Update" : "Add"}
+        {isEdit ? "Update" : "Add"}
       </button>
 
       {error && <p className="text-red-500 mt-2">{error}</p>}

@@ -3,6 +3,7 @@
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ExpenseForm from "../../../components/ExpenseForm";
+import MessageDisplay from "../../../components/MessageDisplay";
 import { editExpense, updateExpense } from "../../../api";
 import Header from "@/app/components/Header";
 
@@ -18,16 +19,17 @@ const EditExpensePage: React.FC = () => {
   const router = useRouter();
   const { id } = useParams();
   const [expense, setExpense] = useState<Expense | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   useEffect(() => {
     const loadExpense = async () => {
       try {
         const fetchedExpense = await editExpense(Number(id));
-        console.log(fetchedExpense);
         setExpense(fetchedExpense);
       } catch (error) {
-        setError("Failed to load expense data.");
+        setMessage("Failed to load expense data.");
+        setIsSuccess(false);
       }
     };
 
@@ -39,18 +41,27 @@ const EditExpensePage: React.FC = () => {
   const handleSubmit = async (updatedExpense: Expense) => {
     try {
       await updateExpense(Number(id), updatedExpense);
-      router.push("/expenses");
+      setMessage("Expense updated successfully!");
+      setIsSuccess(true);
+      setTimeout(() => router.push("/expenses"), 1000);
     } catch (error) {
-      setError("Failed to update expense. Please try again.");
+      setMessage("Failed to update expense. Please try again.");
+      setIsSuccess(false);
+      setTimeout(() => {
+        setMessage(null);
+      }, 1000);
     }
   };
-
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div>
       <Header />
-      <div className="flex h-screen items-center justify-center bg-gray-100">
+      <div className="flex flex-col h-screen items-center justify-center bg-gray-100">
+        <div className="max-w-xl w-full items-center justify-center bg-gray-100">
+          {message && (
+            <MessageDisplay message={message} isSuccess={isSuccess} />
+          )}
+        </div>
         <div className="bg-white p-8 rounded-lg shadow-md text-left max-w-xl w-full">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold text-gray-800">Edit Expense</h1>
