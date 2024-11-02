@@ -6,6 +6,7 @@ interface Expense {
   title: string;
   description: string;
   amount: number;
+  date: Date;
 }
 
 interface ExpenseFormProps {
@@ -22,6 +23,7 @@ export default function ExpenseForm({
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
+  const [date, setDate] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,6 +32,17 @@ export default function ExpenseForm({
       setTitle(initialData.title);
       setDescription(initialData.description);
       setAmount(initialData.amount.toString());
+
+      const initialDate =
+        typeof initialData.date === "string"
+          ? new Date(initialData.date)
+          : initialData.date;
+
+      setDate(
+        initialDate instanceof Date && !isNaN(initialDate.getTime())
+          ? initialDate.toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0]
+      );
     }
   }, [initialData]);
 
@@ -43,6 +56,7 @@ export default function ExpenseForm({
       title,
       description,
       amount: parseFloat(amount) || 0,
+      date: new Date(date),
     };
 
     try {
@@ -59,6 +73,12 @@ export default function ExpenseForm({
       setLoading(false);
     }
   };
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const minDate = new Date();
+  minDate.setFullYear(minDate.getFullYear() - 100);
+  const min = minDate.toISOString().split("T")[0];
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -90,6 +110,18 @@ export default function ExpenseForm({
           onChange={(e) => setAmount(e.target.value)}
           step="0.01"
           required
+          className="px-4 py-2 text-gray-700 font-medium border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label className="text-gray-700 font-medium mb-1">Date:</label>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          required
+          max={today}
+          min={min}
           className="px-4 py-2 text-gray-700 font-medium border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
       </div>
