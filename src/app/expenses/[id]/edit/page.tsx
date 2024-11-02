@@ -18,7 +18,6 @@ const EditExpensePage: React.FC = () => {
   const router = useRouter();
   const { id } = useParams();
   const [expense, setExpense] = useState<Expense | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -29,8 +28,6 @@ const EditExpensePage: React.FC = () => {
         setExpense(fetchedExpense);
       } catch (error) {
         setError("Failed to load expense data.");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -48,7 +45,6 @@ const EditExpensePage: React.FC = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
