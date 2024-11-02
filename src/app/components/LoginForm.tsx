@@ -21,7 +21,7 @@ const LoginForm: React.FC<{
         placeholder="Username or Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="mb-4 px-4 py-2 border text-gray-600 rounded focus:outline-none focus:ring focus:ring-blue-300"
+        className="mb-4 px-4 py-2 border text-gray-600 rounded focus:outline-none focus:ring focus:ring-primary-300"
         required
       />
 
@@ -30,13 +30,13 @@ const LoginForm: React.FC<{
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="mb-4 px-4 py-2 border text-gray-600 rounded focus:outline-none focus:ring focus:ring-blue-300"
+        className="mb-4 px-4 py-2 border text-gray-600 rounded focus:outline-none focus:ring focus:ring-primary-300"
         required
       />
 
       <button
         type="submit"
-        className="w-full mb-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        className="w-full mb-2 px-4 py-2 bg-primary text-white rounded hover:bg-secondary transition-colors"
       >
         Log In
       </button>
