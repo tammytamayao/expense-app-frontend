@@ -9,6 +9,7 @@ interface Expense {
   title: string;
   description: string;
   amount: number;
+  date: Date;
 }
 
 const AddExpensePage: React.FC = () => {

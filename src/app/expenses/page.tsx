@@ -11,6 +11,7 @@ interface Expense {
   title: string;
   description: string;
   amount: number;
+  date: Date;
 }
 
 const ViewExpensePage: React.FC = () => {
@@ -28,6 +29,7 @@ const ViewExpensePage: React.FC = () => {
             typeof expense.amount === "string"
               ? parseFloat(expense.amount)
               : expense.amount,
+          date: new Date(expense.date),
         }));
         setExpenses(expensesWithNumbers);
       } catch (error) {
@@ -91,6 +93,9 @@ const ViewExpensePage: React.FC = () => {
               <thead>
                 <tr>
                   <th className="border border-gray-300 px-4 py-2 text-gray-800">
+                    Date
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-gray-800">
                     Title
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-gray-800">
@@ -110,6 +115,9 @@ const ViewExpensePage: React.FC = () => {
               <tbody>
                 {expenses.map((expense) => (
                   <tr key={expense.id}>
+                    <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
+                      {expense.date.toLocaleDateString()}
+                    </td>
                     <td className="border border-gray-300 px-4 py-2 text-gray-800">
                       {expense.title}
                     </td>
@@ -138,7 +146,7 @@ const ViewExpensePage: React.FC = () => {
                 ))}
                 <tr>
                   <td
-                    colSpan={2}
+                    colSpan={3}
                     className="border border-gray-300 px-4 py-2 font-bold text-gray-800 text-left"
                   >
                     Total Expenses
