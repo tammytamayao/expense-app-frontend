@@ -2,12 +2,29 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation"; // For redirection after login
 import nextImage from "../../../public/logo.png";
 import LoginForm from "./components/LoginForm";
+import { loginUser } from "../api"; // Adjust path to match your setup
 
 const HomePage: React.FC = () => {
-  const handleLoginSubmit = (email: string, password: string) => {
-    console.log("Email:", email, "Password:", password);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleLoginSubmit = async (email: string, password: string) => {
+    setError(null); // Clear previous errors
+
+    try {
+      // Call loginUser with email and password
+      const response = await loginUser({ email, password });
+      console.log("Login successful:", response);
+
+      // Redirect to expenses page or another authenticated page
+      router.push("/expenses");
+    } catch (err: any) {
+      setError(err.message); // Set error if login fails
+    }
   };
 
   return (
@@ -26,6 +43,9 @@ const HomePage: React.FC = () => {
           </h1>
 
           <LoginForm onSubmit={handleLoginSubmit} />
+
+          {/* Error message display */}
+          {error && <p className="text-red-500 mt-2">{error}</p>}
 
           <div>
             <Link href="/signup">
