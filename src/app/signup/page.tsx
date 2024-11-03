@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import nextImage from "../../../../public/logo.png";
+import nextImage from "../../../public/logo.png";
 import { useState } from "react";
 import { signupUser } from "../api";
 import dynamic from "next/dynamic";

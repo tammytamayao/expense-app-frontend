@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
           <LoginForm onSubmit={handleLoginSubmit} />
 
           <div>
-            <Link href="/home/signup">
+            <Link href="/signup">
               <button className="w-full mb-4 px-4 py-2 border border-primary text-primary rounded hover:text-secondary hover:border-secondary transition-colors">
                 Sign Up
               </button>
