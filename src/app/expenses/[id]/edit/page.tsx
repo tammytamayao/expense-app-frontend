@@ -1,77 +1,18 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import ExpenseForm from "../../components/ExpenseForm";
 import MessageDisplay from "../../../components/MessageDisplay";
-import { editExpense, updateExpense } from "../../../api";
+import useExpenseForm from "../../../hooks/useExpenseForm";
 import Header from "@/app/components/Header";
 
-interface Expense {
-  id?: number;
-  title: string;
-  description: string;
-  amount: number;
-  date: Date;
-  username?: string;
-}
-
 const EditExpensePage: React.FC = () => {
-  const router = useRouter();
   const { id } = useParams();
-  const [expense, setExpense] = useState<Expense | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const router = useRouter();
+  const expenseId = Array.isArray(id) ? id[0] : id;
 
-  const username = sessionStorage.getItem("username");
-
-  useEffect(() => {
-    if (!username) {
-      router.push("/");
-    }
-  }, [username]);
-
-  useEffect(() => {
-    const loadExpense = async () => {
-      if (id) {
-        try {
-          const fetchedExpense = await editExpense(Number(id));
-          setExpense(fetchedExpense);
-        } catch (error) {
-          setMessage("Failed to load expense data.");
-          setIsSuccess(false);
-        }
-      }
-    };
-
-    loadExpense();
-  }, [id]);
-
-  const handleSubmit = async (updatedExpense: Expense) => {
-    if (!username) {
-      setMessage("User not found. Please log in again.");
-      setIsSuccess(false);
-      return;
-    }
-
-    const expenseData = {
-      ...updatedExpense,
-      username,
-    };
-
-    try {
-      await updateExpense(Number(id), expenseData);
-      setMessage("Expense updated successfully!");
-      setIsSuccess(true);
-      setTimeout(() => router.push("/expenses"), 1000);
-    } catch (error) {
-      setMessage("Failed to update expense. Please try again.");
-      setIsSuccess(false);
-      setTimeout(() => {
-        setMessage(null);
-      }, 1000);
-    }
-  };
+  const { expense, message, isSuccess, handleSubmit } =
+    useExpenseForm(expenseId);
 
   return (
     <div>
