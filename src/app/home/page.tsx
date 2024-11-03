@@ -4,10 +4,21 @@ import Link from "next/link";
 import Image from "next/image";
 import nextImage from "../../../public/logo.png";
 import LoginForm from "./components/LoginForm";
+import { useState } from "react";
 
 const HomePage: React.FC = () => {
-  const handleLoginSubmit = (email: string, password: string) => {
-    console.log("Email:", email, "Password:", password);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleLoginSubmit = async (username: string, password: string) => {
+    try {
+      const data = await loginUser(username, password);
+      localStorage.setItem("username", username);
+      console.log("Login successful", data);
+      window.location.href = "/expenses";
+    } catch (error) {
+      setErrorMessage((error as Error).message);
+      console.error("Login failed:", error);
+    }
   };
 
   return (
@@ -24,6 +35,10 @@ const HomePage: React.FC = () => {
             &nbsp;&nbsp;&nbsp;
             <span className="text-primary">M O N E Y</span>
           </h1>
+
+          {errorMessage && (
+            <div className="mb-4 text-red-500">{errorMessage}</div>
+          )}
 
           <LoginForm onSubmit={handleLoginSubmit} />
 
@@ -53,3 +68,6 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+function loginUser(username: string, password: string) {
+  throw new Error("Function not implemented.");
+}

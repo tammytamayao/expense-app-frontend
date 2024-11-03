@@ -130,7 +130,18 @@ const ViewExpensePage: React.FC = () => {
           <Loader />
         ) : expenses.length === 0 ? (
           <div className="bg-yellow-100 border border-yellow-400 text-gray-800 p-4 rounded">
-            <p>No expenses found. Please add some expenses.</p>
+            <p>
+              No expenses found. To add some expenses, &nbsp;
+              <Link href="/expenses/add">
+                <button
+                  className="text-blue-800 underline"
+                  onClick={handleAddExpenseClick}
+                >
+                  {" "}
+                  Click here
+                </button>
+              </Link>{" "}
+            </p>
           </div>
         ) : (
           <div>

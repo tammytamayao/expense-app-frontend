@@ -13,6 +13,7 @@ interface Expense {
   description: string;
   amount: number;
   date: Date;
+  username?: string;
 }
 
 const EditExpensePage: React.FC = () => {
@@ -21,6 +22,8 @@ const EditExpensePage: React.FC = () => {
   const [expense, setExpense] = useState<Expense | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
     const loadExpense = async () => {
@@ -39,8 +42,19 @@ const EditExpensePage: React.FC = () => {
   }, [id]);
 
   const handleSubmit = async (updatedExpense: Expense) => {
+    if (!username) {
+      setMessage("User not found. Please log in again.");
+      setIsSuccess(false);
+      return;
+    }
+
+    const expenseData = {
+      ...updatedExpense,
+      username,
+    };
+
     try {
-      await updateExpense(Number(id), updatedExpense);
+      await updateExpense(Number(id), expenseData);
       setMessage("Expense updated successfully!");
       setIsSuccess(true);
       setTimeout(() => router.push("/expenses"), 1000);

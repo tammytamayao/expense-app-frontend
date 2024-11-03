@@ -1,4 +1,3 @@
-// NOTE: Extendable feature of the application
 "use client";
 
 import { useState } from "react";

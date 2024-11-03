@@ -10,6 +10,23 @@ export interface Expense {
 
 type NewExpense = Omit<Expense, "id">;
 
+export const loginUser = async (
+  username: string,
+  password: string
+): Promise<any> => {
+  const response = await fetch(`${API_URL}/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
+  });
+  if (!response.ok) {
+    throw new Error("Invalid credentials");
+  }
+  return await response.json();
+};
+
 export const fetchExpenses = async (
   page: number
 ): Promise<{
@@ -19,7 +36,11 @@ export const fetchExpenses = async (
   per_page: number;
   total_pages: number;
 }> => {
-  const response = await fetch(`${API_URL}/expenses?page=${page}`);
+  const response = await fetch(`${API_URL}/expenses?page=${page}`, {
+    headers: {
+      Username: localStorage.getItem("username") || "",
+    },
+  });
   if (!response.ok) {
     throw new Error("Failed to fetch expenses");
   }
@@ -31,6 +52,7 @@ export const addExpense = async (expense: NewExpense): Promise<Expense> => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Username: localStorage.getItem("username") || "",
     },
     body: JSON.stringify(expense),
   });
@@ -40,8 +62,12 @@ export const addExpense = async (expense: NewExpense): Promise<Expense> => {
   return await response.json();
 };
 
-export const editExpense = async (id: number) => {
-  const response = await fetch(`${API_URL}/expenses/${id}`);
+export const editExpense = async (id: number): Promise<Expense> => {
+  const response = await fetch(`${API_URL}/expenses/${id}`, {
+    headers: {
+      Username: localStorage.getItem("username") || "",
+    },
+  });
   if (!response.ok) {
     throw new Error(`Failed to retrieve expense`);
   }
@@ -56,6 +82,7 @@ export const updateExpense = async (
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Username: localStorage.getItem("username") || "",
     },
     body: JSON.stringify(expense),
   });
@@ -68,6 +95,9 @@ export const updateExpense = async (
 export const deleteExpense = async (id: number): Promise<void> => {
   const response = await fetch(`${API_URL}/expenses/${id}`, {
     method: "DELETE",
+    headers: {
+      Username: localStorage.getItem("username") || "",
+    },
   });
   if (!response.ok) {
     throw new Error("Failed to delete expense");
