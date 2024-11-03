@@ -24,7 +24,7 @@ const Header: React.FC = () => {
     <header className="bg-secondary shadow-md">
       <div className="mx-auto px-2 py-2 flex items-center justify-between">
         {" "}
-        <Link href="/" className="flex items-center">
+        <Link href="/expenses" className="flex items-center">
           <Image src={logo} alt="Logo" width={50} height={50} />
           <h1 className="ml-2 text-2xl font-bold">
             <span className="text-white">BRIGHT </span>
