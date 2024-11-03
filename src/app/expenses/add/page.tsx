@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ExpenseForm from "../components/ExpenseForm";
 import MessageDisplay from "../../components/MessageDisplay";
 import { addExpense } from "../../api";
@@ -21,7 +21,13 @@ const AddExpensePage: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
-  const username = localStorage.getItem("username");
+  const username = sessionStorage.getItem("username");
+
+  useEffect(() => {
+    if (!username) {
+      router.push("/");
+    }
+  }, [username]);
 
   const handleAdd = async (expense: Expense) => {
     if (!username) {

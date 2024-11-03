@@ -23,22 +23,28 @@ const EditExpensePage: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
-  const username = localStorage.getItem("username");
+  const username = sessionStorage.getItem("username");
+
+  useEffect(() => {
+    if (!username) {
+      router.push("/");
+    }
+  }, [username]);
 
   useEffect(() => {
     const loadExpense = async () => {
-      try {
-        const fetchedExpense = await editExpense(Number(id));
-        setExpense(fetchedExpense);
-      } catch (error) {
-        setMessage("Failed to load expense data.");
-        setIsSuccess(false);
+      if (id) {
+        try {
+          const fetchedExpense = await editExpense(Number(id));
+          setExpense(fetchedExpense);
+        } catch (error) {
+          setMessage("Failed to load expense data.");
+          setIsSuccess(false);
+        }
       }
     };
 
-    if (id) {
-      loadExpense();
-    }
+    loadExpense();
   }, [id]);
 
   const handleSubmit = async (updatedExpense: Expense) => {

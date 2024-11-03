@@ -33,7 +33,7 @@ const Header: React.FC = () => {
         </Link>
         <button
           onClick={handleLogout}
-          className="ml-auto text-white text-lg px-4 py-2 rounded hover:bg-red-600 transition-colors" // Add styling for the logout button
+          className="ml-auto text-white text-lg px-4 py-2 rounded hover:bg-red-600 transition-colors"
         >
           Logout
         </button>
