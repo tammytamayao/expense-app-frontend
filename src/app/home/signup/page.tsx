@@ -2,25 +2,24 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import nextImage from "../../../public/logo.png";
+import nextImage from "../../../../public/logo.png";
 import { useState } from "react";
-import { loginUser } from "../api";
+import { signupUser } from "../../api";
 import dynamic from "next/dynamic";
 
-const LoginForm = dynamic(() => import("./components/LoginForm"));
+const SignupForm = dynamic(() => import("../components/SignupForm"));
 
-const HomePage: React.FC = () => {
+const SignupPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleLoginSubmit = async (username: string, password: string) => {
+  const handleSignupSubmit = async (username: string, password: string) => {
     try {
-      const data = await loginUser(username, password);
-      localStorage.setItem("username", username);
-      console.log("Login successful", data);
-      window.location.href = "/expenses";
+      const data = await signupUser(username, password);
+      console.log("Signup successful", data);
+      window.location.href = "/";
     } catch (error) {
       setErrorMessage((error as Error).message);
-      console.error("Login failed:", error);
+      console.error("Signup failed:", error);
     }
   };
 
@@ -43,31 +42,19 @@ const HomePage: React.FC = () => {
             <div className="mb-4 text-red-500">{errorMessage}</div>
           )}
 
-          <LoginForm onSubmit={handleLoginSubmit} />
+          <SignupForm onSubmit={handleSignupSubmit} />
 
           <div>
-            <Link href="/home/signup">
+            <Link href="/">
               <button className="w-full mb-4 px-4 py-2 border border-primary text-primary rounded hover:text-secondary hover:border-secondary transition-colors">
-                Sign Up
+                Back to Login
               </button>
             </Link>
           </div>
-
-          <div className="flex items-center my-4">
-            <hr className="flex-grow border-gray-300" />
-            <span className="mx-2 text-gray-600">or</span>
-            <hr className="flex-grow border-gray-300" />
-          </div>
-
-          <Link href="/expenses" aria-label="Continue as guest">
-            <span className="text-gray-800 hover:text-primary cursor-pointer text-lg">
-              Continue as <strong className="font-bold">Guest</strong>
-            </span>
-          </Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default HomePage;
+export default SignupPage;
