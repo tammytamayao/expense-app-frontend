@@ -8,7 +8,67 @@ export interface Expense {
   date: Date;
 }
 
+export interface UserCredentials {
+  email: string;
+  password: string;
+  password_confirmation?: string;
+}
+
 type NewExpense = Omit<Expense, "id">;
+
+export const registerUser = async (
+  credentials: UserCredentials
+): Promise<{ id: number; email: string }> => {
+  const response = await fetch(`${API_URL}/users`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      `Failed to create account: ${errorData.error || errorData.message}`
+    );
+  }
+
+  return await response.json();
+};
+
+export const loginUser = async (
+  credentials: UserCredentials
+): Promise<{ message: string; user: { id: number; email: string } }> => {
+  const response = await fetch(`${API_URL}/users/sign_in`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ user: credentials }),
+    credentials: "include", // To handle cookies if your backend sets them
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(`Login failed: ${errorData.message}`);
+  }
+
+  return await response.json();
+};
+
+export const logoutUser = async (): Promise<{ message: string }> => {
+  const response = await fetch(`${API_URL}/users/sign_out`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Logout failed");
+  }
+
+  return await response.json();
+};
 
 export const fetchExpenses = async (
   page: number
