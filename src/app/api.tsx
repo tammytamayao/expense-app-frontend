@@ -42,6 +42,22 @@ export const logoutUser = async (): Promise<void> => {
   localStorage.removeItem("username");
 };
 
+export const signupUser = async (username: string, password: string) => {
+  const response = await fetch("http://127.0.0.1:3000/api/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ user: { username, password } }), // Nest params under `user`
+  });
+
+  if (!response.ok) {
+    throw new Error("Signup failed");
+  }
+
+  return response.json();
+};
+
 export const fetchExpenses = async (
   page: number
 ): Promise<{
