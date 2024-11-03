@@ -13,6 +13,7 @@ interface Expense {
   description: string;
   amount: number;
   date: Date;
+  username?: string;
 }
 
 const AddExpensePage: React.FC = () => {
@@ -20,9 +21,22 @@ const AddExpensePage: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
+  const username = localStorage.getItem("username");
+
   const handleAdd = async (expense: Expense) => {
+    if (!username) {
+      setMessage("User not found. Please log in again.");
+      setIsSuccess(false);
+      return;
+    }
+
+    const expenseData = {
+      ...expense,
+      username,
+    };
+
     try {
-      await addExpense(expense);
+      await addExpense(expenseData);
       setMessage("Expense added successfully!");
       setIsSuccess(true);
       setTimeout(() => router.push("/expenses"), 1000);

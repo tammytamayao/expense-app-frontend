@@ -2,24 +2,24 @@
 
 import { useState } from "react";
 
-const LoginForm: React.FC<{
-  onSubmit: (email: string, password: string) => void;
+const SignupForm: React.FC<{
+  onSubmit: (username: string, password: string) => void;
 }> = ({ onSubmit }) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (event: React.FormEvent) => {
+  const handleSignup = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(email, password);
+    onSubmit(username, password);
   };
 
   return (
-    <form onSubmit={handleLogin} className="flex flex-col">
+    <form onSubmit={handleSignup} className="flex flex-col">
       <input
         type="text"
         placeholder="Username"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         className="mb-4 px-4 py-2 border text-gray-600 rounded focus:outline-none focus:ring focus:ring-primary-300"
         required
       />
@@ -37,10 +37,10 @@ const LoginForm: React.FC<{
         type="submit"
         className="w-full mb-2 px-4 py-2 bg-primary text-white rounded hover:bg-secondary transition-colors"
       >
-        Log In
+        Sign Up
       </button>
     </form>
   );
 };
 
-export default LoginForm;
+export default SignupForm;
