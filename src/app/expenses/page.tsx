@@ -46,7 +46,9 @@ const ViewExpensePage: React.FC = () => {
       setError("Failed to load expenses");
       console.error(error);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   };
 
@@ -80,13 +82,13 @@ const ViewExpensePage: React.FC = () => {
       setError(null);
       setTimeout(() => {
         setSuccessMessage(null);
-      }, 2000);
+      }, 1500);
     } catch (error) {
       setError("Failed to delete expense");
       console.error(error);
       setTimeout(() => {
         setError(null);
-      }, 2000);
+      }, 1500);
     }
   };
 
@@ -106,14 +108,14 @@ const ViewExpensePage: React.FC = () => {
     setNavigating(true);
     setTimeout(() => {
       setNavigating(false);
-    }, 500);
+    }, 2000);
   };
 
   const handleEditExpenseClick = () => {
     setNavigating(true);
     setTimeout(() => {
       setNavigating(false);
-    }, 500);
+    }, 2000);
   };
 
   return (
@@ -124,18 +126,6 @@ const ViewExpensePage: React.FC = () => {
           message={successMessage || error}
           isSuccess={!!successMessage}
         />
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-gray-800">Expense List</h1>
-          <Link href="/expenses/add">
-            <button
-              onClick={handleAddExpenseClick}
-              className="bg-primary text-white px-4 py-2 rounded hover:bg-secondary transition-colors"
-            >
-              + Add Expense
-            </button>
-          </Link>
-        </div>
-
         {loading || navigating ? (
           <Loader />
         ) : expenses.length === 0 ? (
@@ -143,94 +133,108 @@ const ViewExpensePage: React.FC = () => {
             <p>No expenses found. Please add some expenses.</p>
           </div>
         ) : (
-          <div className="flex-grow overflow-auto">
-            <table className="min-w-full border border-gray-300 mb-4">
-              <thead>
-                <tr>
-                  <th className="border border-gray-300 px-4 py-2 text-gray-800">
-                    Date
-                  </th>
-                  <th className="border border-gray-300 px-4 py-2 text-gray-800">
-                    Title
-                  </th>
-                  <th className="border border-gray-300 px-4 py-2 text-gray-800">
-                    Description
-                  </th>
-                  <th className="border border-gray-300 px-4 py-2 text-gray-800">
-                    Amount ($)
-                  </th>
-                  <th
-                    colSpan={2}
-                    className="border border-gray-300 text-gray-800 text-center"
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {expenses.map((expense) => (
-                  <tr key={expense.id}>
-                    <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
-                      {expense.date.toLocaleDateString()}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                      {expense.title}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                      {expense.description}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                      {expense.amount.toFixed(2)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
-                      <Link href={`/expenses/${expense.id}/edit`}>
-                        <button
-                          onClick={handleEditExpenseClick}
-                          className="text-blue-600 hover:underline"
-                        >
-                          Edit
-                        </button>
-                      </Link>
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
-                      <button
-                        onClick={() => handleDelete(expense.id)}
-                        className="text-red-600 hover:underline"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
+          <div>
             <div className="flex justify-between items-center mb-4">
-              <div className="flex-grow flex justify-center">
+              <h1 className="text-2xl font-bold text-gray-800">Expense List</h1>
+              <Link href="/expenses/add">
                 <button
-                  onClick={handlePreviousPage}
-                  disabled={currentPage === 1}
-                  className="bg-primary text-white px-3 py-1 rounded disabled:opacity-50 text-sm"
+                  onClick={handleAddExpenseClick}
+                  className="bg-primary text-white px-4 py-2 rounded hover:bg-secondary transition-colors"
                 >
-                  {"<"}
+                  + Add Expense
                 </button>
-                <span className="mx-2 text-black">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
-                  className="bg-primary text-white px-3 py-1 rounded disabled:opacity-50 text-sm"
-                >
-                  {">"}
-                </button>
-              </div>
+              </Link>
             </div>
 
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800">
-                Total Expenses: ${totalAmount.toFixed(2)}
-              </h2>
+            <div className="flex-grow overflow-auto">
+              <table className="min-w-full border border-gray-300 mb-4">
+                <thead>
+                  <tr>
+                    <th className="border border-gray-300 px-4 py-2 text-gray-800">
+                      Date
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-gray-800">
+                      Title
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-gray-800">
+                      Description
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-gray-800">
+                      Amount ($)
+                    </th>
+                    <th
+                      colSpan={2}
+                      className="border border-gray-300 text-gray-800 text-center"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {expenses.map((expense) => (
+                    <tr key={expense.id}>
+                      <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
+                        {expense.date.toLocaleDateString()}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                        {expense.title}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                        {expense.description}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                        {expense.amount.toFixed(2)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
+                        <div className="flex justify-center items-center space-x-8">
+                          <Link href={`/expenses/${expense.id}/edit`}>
+                            <img
+                              src="/edit.svg"
+                              alt="Edit"
+                              onClick={handleEditExpenseClick}
+                              className="cursor-pointer w-5 h-5"
+                            />
+                          </Link>
+                          <img
+                            src="/delete.svg"
+                            alt="Delete"
+                            onClick={() => handleDelete(expense.id)}
+                            className="cursor-pointer w-5 h-5 text-red-600 hover:underline"
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex-grow flex justify-center">
+                  <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                    className="bg-primary text-white px-3 py-1 rounded disabled:opacity-50 text-sm"
+                  >
+                    {"<"}
+                  </button>
+                  <span className="mx-2 text-black">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className="bg-primary text-white px-3 py-1 rounded disabled:opacity-50 text-sm"
+                  >
+                    {">"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-gray-800">
+                  Total Expenses: ${totalAmount.toFixed(2)}
+                </h2>
+              </div>
             </div>
           </div>
         )}
