@@ -39,7 +39,7 @@ export const logoutUser = async (): Promise<void> => {
     throw new Error("Failed to log out");
   }
 
-  localStorage.removeItem("username");
+  sessionStorage.removeItem("username");
 };
 
 export const signupUser = async (username: string, password: string) => {
@@ -48,13 +48,11 @@ export const signupUser = async (username: string, password: string) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ user: { username, password } }), // Nest params under `user`
+    body: JSON.stringify({ user: { username, password } }),
   });
-
   if (!response.ok) {
     throw new Error("Signup failed");
   }
-
   return response.json();
 };
 
@@ -69,7 +67,7 @@ export const fetchExpenses = async (
 }> => {
   const response = await fetch(`${API_URL}/expenses?page=${page}`, {
     headers: {
-      Username: localStorage.getItem("username") || "",
+      Username: sessionStorage.getItem("username") || "",
     },
   });
   if (!response.ok) {
@@ -83,7 +81,7 @@ export const addExpense = async (expense: NewExpense): Promise<Expense> => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Username: localStorage.getItem("username") || "",
+      Username: sessionStorage.getItem("username") || "",
     },
     body: JSON.stringify(expense),
   });
@@ -96,7 +94,7 @@ export const addExpense = async (expense: NewExpense): Promise<Expense> => {
 export const editExpense = async (id: number): Promise<Expense> => {
   const response = await fetch(`${API_URL}/expenses/${id}`, {
     headers: {
-      Username: localStorage.getItem("username") || "",
+      Username: sessionStorage.getItem("username") || "",
     },
   });
   if (!response.ok) {
@@ -113,7 +111,7 @@ export const updateExpense = async (
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Username: localStorage.getItem("username") || "",
+      Username: sessionStorage.getItem("username") || "",
     },
     body: JSON.stringify(expense),
   });
@@ -127,7 +125,7 @@ export const deleteExpense = async (id: number): Promise<void> => {
   const response = await fetch(`${API_URL}/expenses/${id}`, {
     method: "DELETE",
     headers: {
-      Username: localStorage.getItem("username") || "",
+      Username: sessionStorage.getItem("username") || "",
     },
   });
   if (!response.ok) {

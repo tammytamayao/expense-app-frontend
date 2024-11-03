@@ -6,6 +6,7 @@ import { fetchExpenses, deleteExpense } from "../api";
 import MessageDisplay from "../components/MessageDisplay";
 import Header from "../components/Header";
 import Loader from "../components/Loader";
+import { useRouter } from "next/navigation";
 
 interface Expense {
   id: number;
@@ -16,6 +17,7 @@ interface Expense {
 }
 
 const ViewExpensePage: React.FC = () => {
+  const router = useRouter();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -53,8 +55,13 @@ const ViewExpensePage: React.FC = () => {
   };
 
   useEffect(() => {
-    loadExpenses(currentPage);
-  }, [currentPage]);
+    const username = sessionStorage.getItem("username");
+    if (!username) {
+      router.push("/");
+    } else {
+      loadExpenses(currentPage);
+    }
+  }, []);
 
   const handleDelete = async (id: number) => {
     try {

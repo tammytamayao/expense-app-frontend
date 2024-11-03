@@ -15,7 +15,7 @@ const HomePage: React.FC = () => {
   const handleLoginSubmit = async (username: string, password: string) => {
     try {
       const data = await loginUser(username, password);
-      localStorage.setItem("username", username);
+      sessionStorage.setItem("username", username);
       console.log("Login successful", data);
       window.location.href = "/expenses";
     } catch (error) {
