@@ -6,11 +6,13 @@ import nextImage from "../../../public/logo.png";
 import { useState } from "react";
 import { loginUser } from "../api";
 import dynamic from "next/dynamic";
+import MessageDisplay from "../components/MessageDisplay";
 
 const LoginForm = dynamic(() => import("./components/LoginForm"));
 
 const HomePage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const handleLoginSubmit = async (username: string, password: string) => {
     try {
@@ -20,13 +22,20 @@ const HomePage: React.FC = () => {
       window.location.href = "/expenses";
     } catch (error) {
       setErrorMessage((error as Error).message);
+      setIsSuccess(false);
       console.error("Login failed:", error);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 1000);
     }
   };
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex-grow flex items-center justify-center bg-gray-100">
+      <div className="flex-grow flex flex-col items-center justify-center bg-gray-100">
+        <div className="max-w-md w-full items-center justify-center bg-gray-100">
+          <MessageDisplay message={errorMessage} isSuccess={isSuccess} />
+        </div>
         <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
           <Image
             src={nextImage}
@@ -38,10 +47,6 @@ const HomePage: React.FC = () => {
             &nbsp;&nbsp;&nbsp;
             <span className="text-primary">M O N E Y</span>
           </h1>
-
-          {errorMessage && (
-            <div className="mb-4 text-red-500">{errorMessage}</div>
-          )}
 
           <LoginForm onSubmit={handleLoginSubmit} />
 

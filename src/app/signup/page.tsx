@@ -4,13 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import nextImage from "../../../../public/logo.png";
 import { useState } from "react";
-import { signupUser } from "../../api";
+import { signupUser } from "../api";
 import dynamic from "next/dynamic";
+import MessageDisplay from "@/app/components/MessageDisplay";
 
-const SignupForm = dynamic(() => import("../components/SignupForm"));
+const SignupForm = dynamic(() => import("./components/SignupForm"));
 
 const SignupPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const handleSignupSubmit = async (username: string, password: string) => {
     try {
@@ -19,13 +21,20 @@ const SignupPage: React.FC = () => {
       window.location.href = "/";
     } catch (error) {
       setErrorMessage((error as Error).message);
+      setIsSuccess(false);
       console.error("Signup failed:", error);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 1000);
     }
   };
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex-grow flex items-center justify-center bg-gray-100">
+      <div className="flex-grow flex flex-col items-center justify-center bg-gray-100">
+        <div className="max-w-md w-full items-center justify-center bg-gray-100">
+          <MessageDisplay message={errorMessage} isSuccess={isSuccess} />
+        </div>
         <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
           <Image
             src={nextImage}
@@ -37,10 +46,6 @@ const SignupPage: React.FC = () => {
             &nbsp;&nbsp;&nbsp;
             <span className="text-primary">M O N E Y</span>
           </h1>
-
-          {errorMessage && (
-            <div className="mb-4 text-red-500">{errorMessage}</div>
-          )}
 
           <SignupForm onSubmit={handleSignupSubmit} />
 
