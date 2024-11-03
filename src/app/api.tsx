@@ -27,6 +27,21 @@ export const loginUser = async (
   return await response.json();
 };
 
+export const logoutUser = async (): Promise<void> => {
+  const response = await fetch(`${API_URL}/logout`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to log out");
+  }
+
+  localStorage.removeItem("username");
+};
+
 export const fetchExpenses = async (
   page: number
 ): Promise<{

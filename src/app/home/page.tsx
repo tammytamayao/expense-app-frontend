@@ -3,8 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import nextImage from "../../../public/logo.png";
-import LoginForm from "./components/LoginForm";
 import { useState } from "react";
+import { loginUser } from "../api";
+import dynamic from "next/dynamic";
+
+const LoginForm = dynamic(() => import("./components/LoginForm"));
 
 const HomePage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -68,6 +71,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-function loginUser(username: string, password: string) {
-  throw new Error("Function not implemented.");
-}
