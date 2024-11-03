@@ -17,7 +17,7 @@ const LoginForm: React.FC<{
     <form onSubmit={handleLogin} className="flex flex-col">
       <input
         type="text"
-        placeholder="Username or Email"
+        placeholder="Username"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         className="mb-4 px-4 py-2 border text-gray-600 rounded focus:outline-none focus:ring focus:ring-primary-300"
