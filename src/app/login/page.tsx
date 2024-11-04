@@ -1,14 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import nextImage from "../../../public/logo.png";
 import { useState } from "react";
 import { loginUser } from "../api";
-import dynamic from "next/dynamic";
 import MessageDisplay from "../components/MessageDisplay";
-
-const LoginForm = dynamic(() => import("./components/LoginForm"));
+import UserForm from "../components/UserForm";
+import UserFormHeader from "../components/UserHeader";
 
 const HomePage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -37,19 +34,8 @@ const HomePage: React.FC = () => {
           <MessageDisplay message={errorMessage} isSuccess={isSuccess} />
         </div>
         <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
-          <Image
-            src={nextImage}
-            alt="Welcome to Expense Tracker"
-            className="mb-2 w-80 h-60"
-          />
-          <h1 className="mb-4 text-2xl font-bold">
-            <span className="text-black">B R I G H T</span>
-            &nbsp;&nbsp;&nbsp;
-            <span className="text-primary">M O N E Y</span>
-          </h1>
-
-          <LoginForm onSubmit={handleLoginSubmit} />
-
+          <UserFormHeader />
+          <UserForm onSubmit={handleLoginSubmit} buttonLabel="Log In" />
           <div>
             <Link href="/signup">
               <button className="w-full mb-4 px-4 py-2 border border-primary text-primary rounded hover:text-secondary hover:border-secondary transition-colors">
@@ -57,7 +43,6 @@ const HomePage: React.FC = () => {
               </button>
             </Link>
           </div>
-
           <div className="flex items-center my-4">
             <hr className="flex-grow border-gray-300" />
             <span className="mx-2 text-gray-600">or</span>
