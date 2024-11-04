@@ -1,9 +1,5 @@
 import React from "react";
-
-interface MessageDisplayProps {
-  message: string | null;
-  isSuccess: boolean;
-}
+import { MessageDisplayProps } from "../types";
 
 const MessageDisplay: React.FC<MessageDisplayProps> = ({
   message,

@@ -1,9 +1,6 @@
 import React from "react";
 import Link from "next/link";
-
-interface NoExpensesMessageProps {
-  onAddExpenseClick: () => void;
-}
+import { NoExpensesMessageProps } from "@/app/types";
 
 const NoExpensesMessage: React.FC<NoExpensesMessageProps> = ({
   onAddExpenseClick,

@@ -1,13 +1,7 @@
 import React from "react";
+import { ExpensePaginationProps } from "@/app/types";
 
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPreviousPage: () => void;
-  onNextPage: () => void;
-}
-
-const ExpensePagination: React.FC<PaginationProps> = ({
+const ExpensePagination: React.FC<ExpensePaginationProps> = ({
   currentPage,
   totalPages,
   onPreviousPage,

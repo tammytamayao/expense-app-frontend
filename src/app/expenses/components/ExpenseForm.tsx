@@ -1,18 +1,5 @@
 import { useState } from "react";
-
-interface Expense {
-  id?: number;
-  title: string;
-  description: string;
-  amount: number;
-  date: Date;
-}
-
-interface ExpenseFormProps {
-  initialData?: Expense;
-  onSubmit: (expense: Expense) => void;
-  isEdit: boolean;
-}
+import { FormExpense, ExpenseFormProps } from "@/app/types";
 
 export default function ExpenseForm({
   initialData,
@@ -35,7 +22,7 @@ export default function ExpenseForm({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const expense: Expense = {
+    const expense: FormExpense = {
       id: initialData?.id,
       title,
       description,

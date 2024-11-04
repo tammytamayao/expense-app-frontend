@@ -3,15 +3,7 @@
 import { useEffect, useState } from "react";
 import { addExpense, editExpense, updateExpense } from "../api";
 import { useRouter } from "next/navigation";
-
-interface Expense {
-  id?: number;
-  title: string;
-  description: string;
-  amount: number;
-  date: Date;
-  username?: string;
-}
+import { Expense } from "../types";
 
 const useHandleExpense = (id?: string) => {
   const router = useRouter();

@@ -1,11 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-interface UserFormProps {
-  onSubmit: (username: string, password: string) => void;
-  buttonLabel: string;
-}
+import { UserFormProps } from "../types";
 
 const UserForm: React.FC<UserFormProps> = ({ onSubmit, buttonLabel }) => {
   const [username, setUsername] = useState("");

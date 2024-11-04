@@ -1,9 +1,6 @@
 import React from "react";
 import Link from "next/link";
-
-interface ExpenseSubHeaderProps {
-  onAddExpenseClick: () => void;
-}
+import { ExpenseSubHeaderProps } from "@/app/types";
 
 const ExpenseSubHeader: React.FC<ExpenseSubHeaderProps> = ({
   onAddExpenseClick,
