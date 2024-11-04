@@ -10,14 +10,7 @@ import Pagination from "./components/ExpensePagination";
 import ExpenseSubHeader from "./components/ExpenseSubHeader";
 import { useRouter } from "next/navigation";
 import NoExpensesMessage from "./components/NoExpenseMessage";
-
-interface Expense {
-  id: number;
-  title: string;
-  description: string;
-  amount: number;
-  date: Date;
-}
+import { Expense } from "../types";
 
 const ViewExpensePage: React.FC = () => {
   const router = useRouter();

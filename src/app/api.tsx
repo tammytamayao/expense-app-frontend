@@ -1,14 +1,5 @@
 const API_URL = "http://127.0.0.1:3000/api";
-
-export interface Expense {
-  id: number;
-  title: string;
-  description: string;
-  amount: number;
-  date: Date;
-}
-
-type NewExpense = Omit<Expense, "id">;
+import { Expense, NewExpense } from "./types";
 
 export const loginUser = async (
   username: string,

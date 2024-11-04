@@ -1,19 +1,6 @@
 import React from "react";
 import Link from "next/link";
-
-interface Expense {
-  id: number;
-  title: string;
-  description: string;
-  amount: number;
-  date: Date;
-}
-
-interface ExpenseTableProps {
-  expenses: Expense[];
-  onDelete: (id: number) => void;
-  onEdit: () => void;
-}
+import { ExpenseTableProps } from "@/app/types";
 
 const ExpenseTable: React.FC<ExpenseTableProps> = ({
   expenses,
