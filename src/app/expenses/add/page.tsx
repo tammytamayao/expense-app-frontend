@@ -3,12 +3,12 @@
 import { useRouter } from "next/navigation";
 import ExpenseForm from "../components/ExpenseForm";
 import MessageDisplay from "../../components/MessageDisplay";
-import useExpenseForm from "../../hooks/useExpenseForm";
+import useHandleExpense from "../../hooks/useHandleExpense";
 import Header from "@/app/components/Header";
 
 const AddExpensePage: React.FC = () => {
   const router = useRouter();
-  const { message, isSuccess, handleSubmit } = useExpenseForm();
+  const { message, isSuccess, handleSubmit } = useHandleExpense();
 
   return (
     <div>

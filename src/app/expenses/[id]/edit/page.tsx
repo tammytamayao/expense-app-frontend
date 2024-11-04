@@ -3,7 +3,7 @@
 import { useRouter, useParams } from "next/navigation";
 import ExpenseForm from "../../components/ExpenseForm";
 import MessageDisplay from "../../../components/MessageDisplay";
-import useExpenseForm from "../../../hooks/useExpenseForm";
+import useHandleExpense from "../../../hooks/useHandleExpense";
 import Header from "@/app/components/Header";
 
 const EditExpensePage: React.FC = () => {
@@ -12,7 +12,7 @@ const EditExpensePage: React.FC = () => {
   const expenseId = Array.isArray(id) ? id[0] : id;
 
   const { expense, message, isSuccess, handleSubmit } =
-    useExpenseForm(expenseId);
+    useHandleExpense(expenseId);
 
   return (
     <div>

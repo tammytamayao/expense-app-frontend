@@ -2,19 +2,22 @@
 
 import { useState } from "react";
 
-const SignupForm: React.FC<{
+interface UserFormProps {
   onSubmit: (username: string, password: string) => void;
-}> = ({ onSubmit }) => {
+  buttonLabel: string;
+}
+
+const UserForm: React.FC<UserFormProps> = ({ onSubmit, buttonLabel }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     onSubmit(username, password);
   };
 
   return (
-    <form onSubmit={handleSignup} className="flex flex-col">
+    <form onSubmit={handleSubmit} className="flex flex-col">
       <input
         type="text"
         placeholder="Username"
@@ -37,10 +40,10 @@ const SignupForm: React.FC<{
         type="submit"
         className="w-full mb-2 px-4 py-2 bg-primary text-white rounded hover:bg-secondary transition-colors"
       >
-        Sign Up
+        {buttonLabel}
       </button>
     </form>
   );
 };
 
-export default SignupForm;
+export default UserForm;
