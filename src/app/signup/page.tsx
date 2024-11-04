@@ -1,28 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { signupUser } from "../api";
-import MessageDisplay from "@/app/components/MessageDisplay";
+import MessageDisplay from "../components/MessageDisplay";
 import UserForm from "../components/UserForm";
 import UserFormHeader from "../components/UserHeader";
+import useAuth from "../hooks/useHandleAuth";
 
 const SignupPage: React.FC = () => {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const { errorMessage, isSuccess, handleSubmit } = useAuth(signupUser);
 
   const handleSignupSubmit = async (username: string, password: string) => {
-    try {
-      const data = await signupUser(username, password);
-      console.log("Signup successful", data);
+    const success = await handleSubmit(username, password);
+    if (success) {
       window.location.href = "/";
-    } catch (error) {
-      setErrorMessage((error as Error).message);
-      setIsSuccess(false);
-      console.error("Signup failed:", error);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 1000);
     }
   };
 

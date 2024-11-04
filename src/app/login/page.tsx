@@ -1,29 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { loginUser } from "../api";
 import MessageDisplay from "../components/MessageDisplay";
 import UserForm from "../components/UserForm";
 import UserFormHeader from "../components/UserHeader";
+import useHandleAuth from "../hooks/useHandleAuth";
 
 const HomePage: React.FC = () => {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const { errorMessage, isSuccess, handleSubmit } = useHandleAuth(loginUser);
 
   const handleLoginSubmit = async (username: string, password: string) => {
-    try {
-      const data = await loginUser(username, password);
+    const success = await handleSubmit(username, password);
+    if (success) {
       sessionStorage.setItem("username", username);
-      console.log("Login successful", data);
       window.location.href = "/expenses";
-    } catch (error) {
-      setErrorMessage((error as Error).message);
-      setIsSuccess(false);
-      console.error("Login failed:", error);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 1000);
     }
   };
 
@@ -48,7 +39,6 @@ const HomePage: React.FC = () => {
             <span className="mx-2 text-gray-600">or</span>
             <hr className="flex-grow border-gray-300" />
           </div>
-
           <Link href="/expenses" aria-label="Continue as guest">
             <span className="text-gray-800 hover:text-primary cursor-pointer text-lg">
               Continue as <strong className="font-bold">Guest</strong>
