@@ -13,7 +13,7 @@ interface Expense {
   username?: string;
 }
 
-const useExpenseForm = (id?: string) => {
+const useHandleExpense = (id?: string) => {
   const router = useRouter();
   const [expense, setExpense] = useState<Expense | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -81,4 +81,4 @@ const useExpenseForm = (id?: string) => {
   };
 };
 
-export default useExpenseForm;
+export default useHandleExpense;
