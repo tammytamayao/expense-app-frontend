@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:3000/api";
+const API_URL = "http://127.0.0.1:3000/api"; // must be in ENV for an actual application
 import { Expense, NewExpense } from "./types";
 
 export const loginUser = async (
