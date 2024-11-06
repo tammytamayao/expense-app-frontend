@@ -72,33 +72,24 @@ const ViewExpensePage: React.FC = () => {
   }, [pagination.currentPage]);
 
   const handleDelete = async (id: number) => {
+    setLoading(true);
     try {
       await deleteExpense(id);
-      const updatedExpenses = expenses.filter((expense) => expense.id !== id);
-      setExpenses(updatedExpenses);
-      updateTotalAmount(updatedExpenses);
-      managePagination(updatedExpenses.length);
       setSuccessMessage("Expense deleted successfully!");
       setTimeout(() => setSuccessMessage(null), 1500);
+
+      if (expenses.length === 1 && pagination.currentPage > 1) {
+        setPagination((prev) => ({
+          ...prev,
+          currentPage: prev.currentPage - 1,
+        }));
+      } else {
+        await loadExpenses(pagination.currentPage);
+      }
     } catch (error) {
       handleError("Failed to delete expense");
-    }
-  };
-
-  const updateTotalAmount = (expenses: Expense[]) => {
-    const totalAmount = expenses.reduce(
-      (total, expense) => total + expense.amount,
-      0
-    );
-    setPagination((prev) => ({ ...prev, totalAmount }));
-  };
-
-  const managePagination = (remainingExpenses: number) => {
-    if (remainingExpenses === 0) {
-      setPagination((prev) => ({ ...prev, currentPage: 1 }));
-      loadExpenses(1);
-    } else if (remainingExpenses < (pagination.currentPage - 1) * 10) {
-      setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
+    } finally {
+      setLoading(false);
     }
   };
 

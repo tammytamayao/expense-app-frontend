@@ -57,6 +57,12 @@ export default function ExpenseForm({
     onSubmit(expense);
   };
 
+  const today = new Date().toISOString().split("T")[0];
+
+  const minDate = new Date();
+  minDate.setFullYear(minDate.getFullYear() - 100);
+  const min = minDate.toISOString().split("T")[0];
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col">
@@ -97,6 +103,8 @@ export default function ExpenseForm({
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
+          max={today}
+          min={min}
           required
           className="px-4 py-2 text-gray-700 font-medium border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
