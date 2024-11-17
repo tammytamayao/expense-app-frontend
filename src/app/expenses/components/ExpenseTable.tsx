@@ -44,7 +44,10 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({
               {expense.description}
             </td>
             <td className="border border-gray-300 px-4 py-2 text-gray-800">
-              {expense.amount.toFixed(2)}
+              {expense.amount.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </td>
             <td className="border border-gray-300 px-4 py-2 text-gray-800 text-center">
               <div className="flex justify-center items-center space-x-8">

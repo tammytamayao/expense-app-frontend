@@ -15,7 +15,10 @@ export default function ExpenseForm({
     ? (typeof initialData.amount === "string"
         ? parseFloat(initialData.amount)
         : initialData.amount
-      ).toFixed(2)
+      ).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
     : "0.00";
 
   const [amount, setAmount] = useState<string>(initialAmount);
@@ -29,13 +32,24 @@ export default function ExpenseForm({
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/,/g, "");
     if (/^\d*\.?\d*$/.test(value)) {
-      setAmount(value);
+      setAmount(
+        parseFloat(value).toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+        }) || "0"
+      );
     }
   };
 
   const handleAmountBlur = () => {
-    const formattedAmount = parseFloat(amount);
-    setAmount(isNaN(formattedAmount) ? "0.00" : formattedAmount.toFixed(2));
+    const formattedAmount = parseFloat(amount.replace(/,/g, ""));
+    setAmount(
+      isNaN(formattedAmount)
+        ? "0.00"
+        : formattedAmount.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+    );
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
