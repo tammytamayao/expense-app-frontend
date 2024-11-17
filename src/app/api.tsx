@@ -1,5 +1,5 @@
 const API_URL = "http://127.0.0.1:3000/api"; // must be in ENV for an actual application
-import { Expense, NewExpense } from "./types";
+import { Expense, NewExpense } from "@/app/types";
 
 export const loginUser = async (
   username: string,
@@ -34,7 +34,7 @@ export const logoutUser = async (): Promise<void> => {
 };
 
 export const signupUser = async (username: string, password: string) => {
-  const response = await fetch("http://127.0.0.1:3000/api/users", {
+  const response = await fetch(`${API_URL}/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

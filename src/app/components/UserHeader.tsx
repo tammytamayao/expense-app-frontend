@@ -1,5 +1,5 @@
 import Image from "next/image";
-import nextImage from "../../../public/logo.png";
+import nextImage from "@/public/logo.png";
 
 const UserFormHeader: React.FC = () => {
   return (

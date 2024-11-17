@@ -2,11 +2,11 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import ExpenseForm from "../../components/ExpenseForm";
-import MessageDisplay from "../../../components/MessageDisplay";
-import { editExpense, updateExpense } from "../../../api";
-import Header from "@/app/components/Header";
+import { editExpense, updateExpense } from "@/app/api";
 import { FormExpense } from "@/app/types";
+import Header from "@/app/components/Header";
+import MessageDisplay from "@/app/components/MessageDisplay";
+import ExpenseForm from "@/app/expenses/components/ExpenseForm";
 
 const EditExpensePage: React.FC = () => {
   const router = useRouter();

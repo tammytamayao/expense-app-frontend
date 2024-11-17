@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { signupUser } from "../api";
-import MessageDisplay from "../components/MessageDisplay";
-import UserForm from "../components/UserForm";
-import UserFormHeader from "../components/UserHeader";
-import useAuth from "../hooks/useHandleAuth";
+import { signupUser } from "@/app/api";
+import MessageDisplay from "@/app/components/MessageDisplay";
+import UserForm from "@/app/components/UserForm";
+import UserFormHeader from "@/app/components/UserHeader";
+import useHandleAuth from "@/app/hooks/useHandleAuth";
 
 const SignupPage: React.FC = () => {
-  const { errorMessage, isSuccess, handleSubmit } = useAuth(signupUser);
+  const { errorMessage, isSuccess, handleSubmit } = useHandleAuth(signupUser);
 
   const handleSignupSubmit = async (username: string, password: string) => {
     const success = await handleSubmit(username, password);

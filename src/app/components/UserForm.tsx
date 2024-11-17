@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserFormProps } from "../types";
+import { UserFormProps } from "@/app/types";
 
 const UserForm: React.FC<UserFormProps> = ({ onSubmit, buttonLabel }) => {
   const [username, setUsername] = useState("");

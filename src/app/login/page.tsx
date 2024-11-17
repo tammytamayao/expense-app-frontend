@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { loginUser } from "../api";
-import MessageDisplay from "../components/MessageDisplay";
-import UserForm from "../components/UserForm";
-import UserFormHeader from "../components/UserHeader";
-import useHandleAuth from "../hooks/useHandleAuth";
+import { loginUser } from "@/app/api";
+import MessageDisplay from "@/app/components/MessageDisplay";
+import UserForm from "@/app/components/UserForm";
+import UserFormHeader from "@/app/components/UserHeader";
+import useHandleAuth from "@/app/hooks/useHandleAuth";
 
 const HomePage: React.FC = () => {
   const { errorMessage, isSuccess, handleSubmit } = useHandleAuth(loginUser);

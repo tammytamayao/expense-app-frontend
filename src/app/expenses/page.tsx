@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { fetchExpenses, deleteExpense } from "../api";
-import MessageDisplay from "../components/MessageDisplay";
-import Header from "../components/Header";
-import Loader from "../components/Loader";
-import ExpenseTable from "./components/ExpenseTable";
-import Pagination from "./components/ExpensePagination";
-import ExpenseSubHeader from "./components/ExpenseSubHeader";
 import { useRouter } from "next/navigation";
-import NoExpensesMessage from "./components/NoExpenseMessage";
-import { Expense } from "../types";
+import { fetchExpenses, deleteExpense } from "@/app/api";
+import MessageDisplay from "@/app/components/MessageDisplay";
+import Header from "@/app/components/Header";
+import Loader from "@/app/components/Loader";
+import ExpenseTable from "@/app/expenses/components/ExpenseTable";
+import Pagination from "@/app/expenses/components/ExpensePagination";
+import ExpenseSubHeader from "@/app/expenses/components/ExpenseSubHeader";
+import NoExpensesMessage from "@/app/expenses/components/NoExpenseMessage";
+import { Expense } from "@/app/types";
 
 const ViewExpensePage: React.FC = () => {
   const router = useRouter();

@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addExpense, editExpense, updateExpense } from "../api";
 import { useRouter } from "next/navigation";
-import { Expense } from "../types";
+import { addExpense, editExpense, updateExpense } from "@/app/api";
+import { Expense } from "@/app/types";
 
 const useHandleExpense = (id?: string) => {
   const router = useRouter();

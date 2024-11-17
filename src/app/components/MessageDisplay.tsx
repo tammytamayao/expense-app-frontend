@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageDisplayProps } from "../types";
+import { MessageDisplayProps } from "@/app/types";
 
 const MessageDisplay: React.FC<MessageDisplayProps> = ({
   message,

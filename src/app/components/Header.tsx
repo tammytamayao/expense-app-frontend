@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../../public/logo.png";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { logoutUser } from "../api";
+import { logoutUser } from "@/app/api";
+import logo from "@/public/logo.png";
 
 const Header: React.FC = () => {
   const router = useRouter();
