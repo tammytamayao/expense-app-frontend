@@ -81,7 +81,7 @@ const EditExpensePage: React.FC = () => {
               onClick={() => router.back()}
               className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors"
             >
-              <strong>{">"}</strong>
+              <strong>{"X"}</strong>
             </button>
           </div>
           {expense && (

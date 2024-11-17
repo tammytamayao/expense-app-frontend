@@ -59,12 +59,11 @@ const AddExpensePage: React.FC = () => {
         <div className="bg-white p-8 rounded-lg shadow-md text-left max-w-xl w-full">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold text-gray-800">Add Expense</h1>
-            {/* Back button */}
             <button
               onClick={() => router.back()}
               className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors"
             >
-              <strong>{">"}</strong>
+              <strong>{"X"}</strong>
             </button>
           </div>
           <ExpenseForm onSubmit={handleAdd} isEdit={false} />
